@@ -1,8 +1,7 @@
 import org.junit.Test;
-import tryCatch.*;
-import tryCatch.figure.ChessFigure;
-import tryCatch.figure.King;
-import tryCatch.figure.Rook;
+import tryCatch.ChessBoard;
+import tryCatch.PermutationGenerator;
+import tryCatch.figure.*;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -15,7 +14,17 @@ public class TestPermutationGenerator {
 
     @Test
     public void test3x3() {
-        PermutationGenerator.printoutFeasiblePermutations(new ChessBoard(new int[3][3]),
-                new LinkedList<ChessFigure>(Arrays.asList(new King(), new King(), new Rook())));
+        PermutationGenerator.printoutUniqueCorrectPermutations(new ChessBoard(new int[3][3]),
+                new LinkedList<ChessFigure>(Arrays.asList(new King(), new Knight(), new Queen())));
+
+    }
+
+
+    @Test
+    public void test7x7() {
+        PermutationGenerator.printoutUniqueCorrectPermutations(new ChessBoard(new int[7][7]),
+                new LinkedList<ChessFigure>(Arrays.asList(new King(), new King(), new Queen(), new Queen(),
+                        new Bishop())));
+
     }
 }

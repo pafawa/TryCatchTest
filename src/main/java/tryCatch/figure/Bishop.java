@@ -7,6 +7,6 @@ public class Bishop extends ChessFigure {
 
 
     public Bishop() {
-        super(true, "B", MovementType.UP_LEFT, MovementType.UP_RIGHT, MovementType.DOWN_LEFT, MovementType.DOWN_RIGHT);
+        super(true, 'B', MovementType.UP_LEFT, MovementType.UP_RIGHT, MovementType.DOWN_LEFT, MovementType.DOWN_RIGHT);
     }
 }

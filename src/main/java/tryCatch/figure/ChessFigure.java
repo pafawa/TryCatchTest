@@ -11,31 +11,37 @@ import tryCatch.PositionsInCollisionException;
 
 public abstract class ChessFigure {
 
-    /** What kind of movements can the piece make*/
+    /**
+     * What kind of movements can the piece make
+     */
     protected MovementType[] movementTypes;
 
-    /** Can it move more then one position at once*/
+    /**
+     * Can it move more then one position at once
+     */
     private boolean canGoMoreThanOne;
 
-    /** String representation on a chess board */
-    private String stringRep;
 
-    protected ChessFigure(boolean canGoMoreThanOne, String  stringRep, MovementType... movementTypes) {
+    /**
+     * Char representation on a chess board
+     */
+    private Character charRep;
+
+    protected ChessFigure(boolean canGoMoreThanOne, Character charRep, MovementType... movementTypes) {
         this.canGoMoreThanOne = canGoMoreThanOne;
         this.movementTypes = movementTypes;
-        this.stringRep = stringRep;
+        this.charRep = charRep;
     }
 
     @Override
     public String toString() {
-        return stringRep;
+        return String.valueOf(getCharRep());
     }
 
     /**
-     *
      * Marks all positions that are threaten by the chess piece  placed on the  position on the  given board. If at
      * least  one of the  threaten position is taken PositionsInCollisionException is thrown
-     * 
+     *
      * @param chessBoard
      * @param position
      * @throws PositionsInCollisionException
@@ -56,6 +62,18 @@ public abstract class ChessFigure {
         }
     }
 
+    public Character getCharRep() {
+        return charRep;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof ChessFigure)) {
+            return false;
+        }
+
+        return this.getCharRep() == ((ChessFigure) obj).getCharRep();
+    }
 
     public enum MovementType {
         UP(0, -1), DOWN(0, 1), LEFT(-1, 0), RIGHT(+1, 0), UP_RIGHT(1, -1), UP_LEFT(-1, -1), DOWN_RIGHT(1, 1),
@@ -79,6 +97,7 @@ public abstract class ChessFigure {
         public int getRowCoordinates() {
             return rowCoordinates;
         }
+
 
     }
 

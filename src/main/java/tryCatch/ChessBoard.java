@@ -14,14 +14,15 @@ public class ChessBoard {
     public static final String COLUMN_SEPARATOR = "|";
     public static final String EMPTY_FIELD = " ";
     public static final String END_LINE = "\n";
-
-    /** All available positions*/
-    private Set<Position> available = new LinkedHashSet<Position>();  //
-
-    /** Already taken positions*/
-    private  Map<Position, ChessFigure> taken = new HashMap<Position, ChessFigure>();
-
     int colNum, rowNum;
+    /**
+     * All available positions
+     */
+    private Set<Position> available = new LinkedHashSet<Position>();  //
+    /**
+     * Already taken positions
+     */
+    private Map<Position, ChessFigure> taken = new HashMap<Position, ChessFigure>();
     private int[][] board;
 
     public ChessBoard(int[][] board) {
@@ -39,21 +40,20 @@ public class ChessBoard {
     }
 
     /**
-     *
      * @return Iterator for available positions
-     *
      */
     public Iterator<Position> getAvailablePosIterator() {
         return available.iterator();
     }
 
-    /**  Method tries to place the  chess piece on  the position, and mark all threaten positions
+    /**
+     * Method tries to place the  chess piece on  the position, and mark all threaten positions
      * In case of failure  - threaten position is already taken by another piece, PositionsInCollisionException is
      * thrown
      *
-     * @param position position on which figure should placed
+     * @param position    position on which figure should placed
      * @param chessFigure chess figure to placed
-     * @throws PositionsInCollisionException  at least one threaten position is taken by another piece
+     * @throws PositionsInCollisionException at least one threaten position is taken by another piece
      */
     public void placeFigureAndThreaten(Position position, ChessFigure chessFigure) throws PositionsInCollisionException {
         markThreatenPositions(chessFigure, position);
@@ -79,7 +79,7 @@ public class ChessBoard {
      * @throws PositionsInCollisionException
      */
     public void markPosAsNotAvailable(Position position) throws PositionsInCollisionException {
-        if(taken.get(position) != null) {
+        if (taken.get(position) != null) {
             throw new PositionsInCollisionException();
         }
 
@@ -122,8 +122,43 @@ public class ChessBoard {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof ChessBoard))
+            return false;
+
+        ChessBoard chessBoard = (ChessBoard) obj;
+
+        if (chessBoard.rowNum != this.rowNum || chessBoard.colNum != this.colNum) {
+            return false;
+        }
+
+        if (chessBoard.taken.size() != this.taken.size()) {
+            return false;
+        }
+
+        for (Position pos : chessBoard.taken.keySet()) {
+            if (!chessBoard.taken.get(pos).equals(this.taken.get(pos))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 0;
+
+        for (Position pos : taken.keySet()) {
+            hashCode += pos.getRow() * pos.getColumn() + taken.get(pos).getCharRep();
+        }
+
+        return hashCode;
+    }
+
+    @Override
     protected Object clone() throws CloneNotSupportedException {
-        ChessBoard clonedChessBoard =  new ChessBoard(board);
+        ChessBoard clonedChessBoard = new ChessBoard(board);
         clonedChessBoard.available = new LinkedHashSet<Position>(available);
         clonedChessBoard.taken = new HashMap<Position, ChessFigure>(taken);
 
@@ -131,7 +166,6 @@ public class ChessBoard {
     }
 
     /**
-     *
      * Marks all positions that are threaten by the chess piece  placed on the given position. If at least one of the
      * threaten position is taken PositionsInCollisionException is thrown
      *

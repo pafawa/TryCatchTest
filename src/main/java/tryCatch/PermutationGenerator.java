@@ -2,7 +2,10 @@ package tryCatch;
 
 import tryCatch.figure.ChessFigure;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Set;
 
 /**
  * Created by pfarid on 02/11/14.
@@ -13,20 +16,16 @@ public class PermutationGenerator {
      * Printouts all correct permutations (the correct permutation is a permutation for which all of the pieces can be
      * placed on the board without threatening each other).
      *
-     * @param chessBoard  - M N  dimension chess board
+     * @param chessBoard - M N  dimension chess board
      * @param figureList - a list of pieces to be placed on the board
      */
 
     public static void printoutUniqueCorrectPermutations(ChessBoard chessBoard, LinkedList<ChessFigure> figureList) {
 
-        Set<ChessBoard> chessBoardSet = new HashSet<ChessBoard>();
+        Set<ChessBoard> rootOfaTestedTree = new HashSet<ChessBoard>();
 
-        generateCorrectPermutations(chessBoard, figureList, chessBoardSet);
+        printoutUniqueCorrectPermutations(chessBoard, figureList, rootOfaTestedTree);
 
-        for (ChessBoard chB : chessBoardSet) {
-            System.out.print(chB);
-            System.out.print("\n");
-        }
     }
 
 
@@ -34,15 +33,16 @@ public class PermutationGenerator {
      * Ands all correct permutations (the correct permutation is a permutation for which all of the pieces can be
      * placed on the board without threatening each other) to a collection.
      *
-     * @param chessBoard           M N  dimension chess board
-     * @param figureList           a list of pieces to be placed on the board
-     * @param chessBoardCollection collection to which correct permutations are added;
+     * @param chessBoard        M N  dimension chess board
+     * @param figureList        a list of pieces to be placed on the board
+     * @param rootOfaTestedTree a set that stores roots of the already tested tree of chessboard permutations
      */
 
-    public static void generateCorrectPermutations(ChessBoard chessBoard, LinkedList<ChessFigure> figureList,
-                                                   Collection<ChessBoard> chessBoardCollection) {
+    public static void printoutUniqueCorrectPermutations(ChessBoard chessBoard, LinkedList<ChessFigure> figureList,
+                                                         Set<ChessBoard> rootOfaTestedTree) {
         if (figureList.isEmpty()) {
-            chessBoardCollection.add(chessBoard);
+            System.out.print(chessBoard);
+            System.out.print("\n");
             return;
         }
 
@@ -52,20 +52,22 @@ public class PermutationGenerator {
         while (it.hasNext()) {
             Position position = it.next();
 
-            ChessBoard newChessBoard;
-            try {
-                newChessBoard = (ChessBoard) chessBoard.clone();
-            } catch (CloneNotSupportedException e) {
-                throw new RuntimeException(e);
-            }
+            ChessBoard newChessBoard = new ChessBoard(chessBoard);
 
             try {
-                newChessBoard.placeFigureAndThreaten(position, chessFigure);
+                newChessBoard.placeFigureAndMarkThreaten(position, chessFigure);
             } catch (PositionsInCollisionException e) {
                 continue;
             }
 
-            generateCorrectPermutations(newChessBoard, new LinkedList<ChessFigure>(figureList), chessBoardCollection);
+            if (rootOfaTestedTree.contains(newChessBoard)) {
+                continue;
+            } else {
+                rootOfaTestedTree.add(newChessBoard);
+            }
+
+            printoutUniqueCorrectPermutations(newChessBoard, new LinkedList<ChessFigure>(figureList),
+                    rootOfaTestedTree);
         }
 
     }

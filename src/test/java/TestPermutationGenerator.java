@@ -15,7 +15,7 @@ public class TestPermutationGenerator {
     @Test
     public void test3x3() {
         PermutationGenerator.printoutUniqueCorrectPermutations(new ChessBoard(new int[3][3]),
-                new LinkedList<ChessFigure>(Arrays.asList(new King(), new Knight(), new Queen())));
+                new LinkedList<ChessFigure>(Arrays.asList(new King(), new King(), new Rook())));
 
     }
 
@@ -24,7 +24,7 @@ public class TestPermutationGenerator {
     public void test7x7() {
         PermutationGenerator.printoutUniqueCorrectPermutations(new ChessBoard(new int[7][7]),
                 new LinkedList<ChessFigure>(Arrays.asList(new King(), new King(), new Queen(), new Queen(),
-                        new Bishop())));
+                        new Bishop(), new Bishop(), new Knight())));
 
     }
 }

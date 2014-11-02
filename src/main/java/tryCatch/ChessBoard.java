@@ -18,7 +18,7 @@ public class ChessBoard {
     /**
      * All available positions
      */
-    private Set<Position> available = new LinkedHashSet<Position>();  //
+    private Set<Position> available = new LinkedHashSet<Position>();
     /**
      * Already taken positions
      */
@@ -39,6 +39,15 @@ public class ChessBoard {
 
     }
 
+    public ChessBoard(ChessBoard chessBoard) {
+        this.board = chessBoard.board;
+        this.rowNum = chessBoard.rowNum;
+        this.colNum = chessBoard.colNum;
+
+        this.available = new LinkedHashSet<Position>(chessBoard.available);
+        this.taken = new HashMap<Position, ChessFigure>(chessBoard.taken);
+    }
+
     /**
      * @return Iterator for available positions
      */
@@ -55,7 +64,7 @@ public class ChessBoard {
      * @param chessFigure chess figure to placed
      * @throws PositionsInCollisionException at least one threaten position is taken by another piece
      */
-    public void placeFigureAndThreaten(Position position, ChessFigure chessFigure) throws PositionsInCollisionException {
+    public void placeFigureAndMarkThreaten(Position position, ChessFigure chessFigure) throws PositionsInCollisionException {
         markThreatenPositions(chessFigure, position);
         placeFigure(position, chessFigure);
     }
@@ -150,20 +159,13 @@ public class ChessBoard {
         int hashCode = 0;
 
         for (Position pos : taken.keySet()) {
-            hashCode += pos.getRow() * pos.getColumn() + taken.get(pos).getCharRep();
+            hashCode += pos.getRow() + pos.getColumn() * taken.get(pos).getCharRep();
         }
 
         return hashCode;
     }
 
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        ChessBoard clonedChessBoard = new ChessBoard(board);
-        clonedChessBoard.available = new LinkedHashSet<Position>(available);
-        clonedChessBoard.taken = new HashMap<Position, ChessFigure>(taken);
 
-        return clonedChessBoard;
-    }
 
     /**
      * Marks all positions that are threaten by the chess piece  placed on the given position. If at least one of the

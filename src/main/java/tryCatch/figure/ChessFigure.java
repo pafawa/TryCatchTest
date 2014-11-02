@@ -8,10 +8,16 @@ import tryCatch.PositionsInCollisionException;
 /**
  * Created by pfarid on 28/10/14.
  */
+
 public abstract class ChessFigure {
 
+    /** What kind of movements can the piece make*/
     protected MovementType[] movementTypes;
+
+    /** Can it move more then one position at once*/
     private boolean canGoMoreThanOne;
+
+    /** String representation on a chess board */
     private String stringRep;
 
     protected ChessFigure(boolean canGoMoreThanOne, String  stringRep, MovementType... movementTypes) {
@@ -25,7 +31,16 @@ public abstract class ChessFigure {
         return stringRep;
     }
 
-    public void markReachablePositions(ChessBoard chessBoard, Position position) throws PositionsInCollisionException {
+    /**
+     *
+     * Marks all positions that are threaten by the chess piece  placed on the  position on the  given board. If at
+     * least  one of the  threaten position is taken PositionsInCollisionException is thrown
+     * 
+     * @param chessBoard
+     * @param position
+     * @throws PositionsInCollisionException
+     */
+    public void markThreatenPositions(ChessBoard chessBoard, Position position) throws PositionsInCollisionException {
         for (MovementType movementType : movementTypes) {
             boolean feasible;
             Position newPosition = position;

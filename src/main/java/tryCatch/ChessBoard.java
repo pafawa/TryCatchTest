@@ -15,7 +15,10 @@ public class ChessBoard {
     public static final String EMPTY_FIELD = " ";
     public static final String END_LINE = "\n";
 
-    private Set<Position> available = new LinkedHashSet<Position>();
+    /** All available positions*/
+    private Set<Position> available = new LinkedHashSet<Position>();  //
+
+    /** Already taken positions*/
     private  Map<Position, ChessFigure> taken = new HashMap<Position, ChessFigure>();
 
     int colNum, rowNum;
@@ -35,17 +38,46 @@ public class ChessBoard {
 
     }
 
+    /**
+     *
+     * @return Iterator for available positions
+     *
+     */
     public Iterator<Position> getAvailablePosIterator() {
         return available.iterator();
     }
 
+    /**  Method tries to place the  chess piece on  the position, and mark all threaten positions
+     * In case of failure  - threaten position is already taken by another piece, PositionsInCollisionException is
+     * thrown
+     *
+     * @param position position on which figure should placed
+     * @param chessFigure chess figure to placed
+     * @throws PositionsInCollisionException  at least one threaten position is taken by another piece
+     */
+    public void placeFigureAndThreaten(Position position, ChessFigure chessFigure) throws PositionsInCollisionException {
+        markThreatenPositions(chessFigure, position);
+        placeFigure(position, chessFigure);
+    }
 
-    public void placeFigure(Position position, ChessFigure chessFigure) throws PositionsInCollisionException {
-        markReachablePositions(chessFigure, position);
+    /**
+     * Places the chess piece on the position , is the position is taken PositionsInCollisionException is thrown
+     *
+     * @param position
+     * @param chessFigure
+     * @throws PositionsInCollisionException
+     */
+    private void placeFigure(Position position, ChessFigure chessFigure) throws PositionsInCollisionException {
         markPosAsNotAvailable(position);
         taken.put(position, chessFigure);
     }
 
+    /**
+     * Marks the position as not available , if its already taken PositionsInCollisionException is thrown
+     *
+     * @param position
+     * @throws PositionsInCollisionException
+     */
     public void markPosAsNotAvailable(Position position) throws PositionsInCollisionException {
         if(taken.get(position) != null) {
             throw new PositionsInCollisionException();
@@ -55,6 +87,12 @@ public class ChessBoard {
 
     }
 
+    /**
+     * Checks if the position exists on  the board.
+     *
+     * @param position
+     * @return true is exists, false otherwise
+     */
     public boolean isFeasible(Position position) {
         return position.getColumn() < colNum && position.getColumn() >= 0 && position.getRow() < rowNum &&
                 position.getRow() >= 0;
@@ -92,8 +130,18 @@ public class ChessBoard {
         return clonedChessBoard;
     }
 
-    private void markReachablePositions(ChessFigure chessFigure, Position position) throws PositionsInCollisionException {
-        chessFigure.markReachablePositions(this, position);
+    /**
+     *
+     * Marks all positions that are threaten by the chess piece  placed on the given position. If at least one of the
+     * threaten position is taken PositionsInCollisionException is thrown
+     *
+     * @param chessFigure chess piece
+     * @param position
+     * @throws PositionsInCollisionException
+     */
+
+    private void markThreatenPositions(ChessFigure chessFigure, Position position) throws PositionsInCollisionException {
+        chessFigure.markThreatenPositions(this, position);
 
     }
 }

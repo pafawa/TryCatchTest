@@ -10,7 +10,13 @@ import java.util.LinkedList;
  */
 public class PermutationGenerator {
 
-
+    /**
+     * Printouts all correct permutations (the correct permutation is a permutation for which all of the pieces can be
+     * placed on the board without threatening each other).
+     *
+     * @param chessBoard  - M N  dimension chess board
+     * @param figureList - a list of pieces to be placed on the board
+     */
     public static  void printoutFeasiblePermutations(ChessBoard chessBoard, LinkedList<ChessFigure> figureList) {
         if (figureList.isEmpty()) {
             System.out.println(chessBoard);
@@ -31,7 +37,7 @@ public class PermutationGenerator {
             }
 
             try {
-                newChessBoard.placeFigure(position, chessFigure);
+                newChessBoard.placeFigureAndThreaten(position, chessFigure);
             } catch (PositionsInCollisionException e) {
                 continue;
             }

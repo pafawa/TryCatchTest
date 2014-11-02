@@ -39,6 +39,12 @@ public class ChessBoard {
 
     }
 
+    /**
+     * Copy constructor
+     *
+     * @param chessBoard
+     */
+
     public ChessBoard(ChessBoard chessBoard) {
         this.board = chessBoard.board;
         this.rowNum = chessBoard.rowNum;

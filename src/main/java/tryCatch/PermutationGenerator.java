@@ -62,9 +62,8 @@ public class PermutationGenerator {
 
             if (rootOfaTestedTree.contains(newChessBoard)) {
                 continue;
-            } else {
-                rootOfaTestedTree.add(newChessBoard);
             }
+            rootOfaTestedTree.add(newChessBoard);
 
             printoutUniqueCorrectPermutations(newChessBoard, new LinkedList<ChessFigure>(figureList),
                     rootOfaTestedTree);

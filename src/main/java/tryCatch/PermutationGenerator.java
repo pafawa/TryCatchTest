@@ -8,8 +8,12 @@ import java.util.*;
 /**
  * Created by pfarid on 02/11/14.
  */
-public class PermutationGenerator {
+public final class PermutationGenerator {
 
+
+    private PermutationGenerator() {
+
+    }
 
     /**
      * Ands all correct permutations (the correct permutation is a permutation for which all of the pieces can be

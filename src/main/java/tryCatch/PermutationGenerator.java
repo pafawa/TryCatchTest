@@ -4,14 +4,47 @@ import com.sun.tools.javac.util.Pair;
 import tryCatch.figure.ChessFigure;
 
 import java.util.*;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by pfarid on 02/11/14.
  */
 public final class PermutationGenerator {
 
+    public static int POOL_SIZE = 4;
+    public static int MAX_QUEUE_SIZE = 10;
+
 
     private PermutationGenerator() {
+
+    }
+
+
+    public static void printoutUniqueCorrectPermutations(ChessBoard chessBoard, LinkedList<Pair<ChessFigure,
+            Integer>> figureCountList) throws InterruptedException {
+
+        ThreadPoolExecutor threadPoolExecutor =
+                new ThreadPoolExecutor(
+                        POOL_SIZE,
+                        POOL_SIZE,
+                        Long.MAX_VALUE,
+                        TimeUnit.DAYS,
+                        new LinkedBlockingQueue<Runnable>()
+                );
+
+        printoutUniqueCorrectPermutations(chessBoard, figureCountList, threadPoolExecutor);
+
+
+        while (true) {
+            if (threadPoolExecutor.getQueue().size() == 0 && threadPoolExecutor.getActiveCount() == 0) {
+                break;
+            }
+            Thread.sleep(100);
+        }
+
+        threadPoolExecutor.shutdown();
 
     }
 
@@ -24,11 +57,10 @@ public final class PermutationGenerator {
      */
 
     public static void printoutUniqueCorrectPermutations(ChessBoard chessBoard, LinkedList<Pair<ChessFigure,
-            Integer>> figureCountList) {
+            Integer>> figureCountList, final ThreadPoolExecutor executor) {
 
         if (figureCountList.isEmpty()) {
-            System.out.print(chessBoard);
-            System.out.print("\n");
+            printOutBoard(chessBoard);
             return;
         }
 
@@ -37,12 +69,11 @@ public final class PermutationGenerator {
             throw new IllegalArgumentException("Piece count can't be less than 0");
         }
 
-
         Iterator<Set<Position>> it = findUniqueSubsets(chessBoard.getAvailablePos(), chessFigureCount.snd).iterator();
         while (it.hasNext()) {
             Set<Position> positionSet = it.next();
 
-            ChessBoard newChessBoard = new ChessBoard(chessBoard);
+            final ChessBoard newChessBoard = new ChessBoard(chessBoard);
 
             try {
                 for (Position position : positionSet) {
@@ -52,10 +83,33 @@ public final class PermutationGenerator {
                 continue;
             }
 
-            printoutUniqueCorrectPermutations(newChessBoard, new LinkedList<Pair<ChessFigure,
-                    Integer>>(figureCountList));
+            final LinkedList<Pair<ChessFigure,
+                    Integer>> newFigureCountList = new LinkedList<Pair<ChessFigure,
+                    Integer>>(figureCountList);
+
+            if (executor.getQueue().size() < MAX_QUEUE_SIZE) {
+                executor.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        printoutUniqueCorrectPermutations(newChessBoard, newFigureCountList, executor);
+                    }
+                });
+            } else {
+
+                printoutUniqueCorrectPermutations(newChessBoard, new LinkedList<Pair<ChessFigure,
+                        Integer>>(figureCountList), executor);
+            }
         }
 
+    }
+
+    private static void printOutBoard(ChessBoard chessBoard) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(Thread.currentThread().getId());
+        stringBuilder.append("\n");
+        stringBuilder.append(chessBoard);
+
+        System.out.println(stringBuilder.toString());
     }
 
     public static <E> Set<Set<E>> findUniqueSubsets(List<E> list, int subSetSize) {

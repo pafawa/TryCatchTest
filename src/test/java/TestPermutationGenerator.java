@@ -19,7 +19,7 @@ public class TestPermutationGenerator {
 
 
     @Test
-    public void test3x3() {
+    public void test3x3() throws InterruptedException {
         PermutationGenerator.printoutUniqueCorrectPermutations(new ChessBoard(new int[3][3]),
                 new LinkedList<Pair<ChessFigure, Integer>>(Arrays.asList(new Pair<ChessFigure, Integer>(new King(),
                         2), new Pair<ChessFigure, Integer>(new Rook(), 1))));
@@ -28,7 +28,7 @@ public class TestPermutationGenerator {
 
 
     @Test
-    public void test7x7() {
+    public void test7x7() throws InterruptedException {
         PermutationGenerator.printoutUniqueCorrectPermutations(new ChessBoard(new int[7][7]),
                 new LinkedList<Pair<ChessFigure, Integer>>(Arrays.asList(new Pair<ChessFigure, Integer>(new Queen(),
                         2), new Pair<ChessFigure, Integer>(new Bishop(), 2), new Pair<ChessFigure,

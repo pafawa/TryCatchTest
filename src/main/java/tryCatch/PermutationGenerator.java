@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
  */
 public final class PermutationGenerator {
 
-    public static int POOL_SIZE = 4;
+    public static int POOL_SIZE = 6;
     public static int MAX_QUEUE_SIZE = 10;
 
 
@@ -95,9 +95,7 @@ public final class PermutationGenerator {
                     }
                 });
             } else {
-
-                printoutUniqueCorrectPermutations(newChessBoard, new LinkedList<Pair<ChessFigure,
-                        Integer>>(figureCountList), executor);
+                printoutUniqueCorrectPermutations(newChessBoard, newFigureCountList, executor);
             }
         }
 

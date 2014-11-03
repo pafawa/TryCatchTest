@@ -21,7 +21,13 @@ public final class PermutationGenerator {
 
     }
 
-
+    /**
+     * Ands all correct permutations (the correct permutation is a permutation for which all of the pieces can be
+     * placed on the board without threatening each other) to a collection.
+     *
+     * @param chessBoard      M N  dimension chess board
+     * @param figureCountList a list of pieces  with their count to be placed on the board
+     */
     public static void printoutUniqueCorrectPermutations(ChessBoard chessBoard, LinkedList<Pair<ChessFigure,
             Integer>> figureCountList) throws InterruptedException {
 
@@ -48,15 +54,8 @@ public final class PermutationGenerator {
 
     }
 
-    /**
-     * Ands all correct permutations (the correct permutation is a permutation for which all of the pieces can be
-     * placed on the board without threatening each other) to a collection.
-     *
-     * @param chessBoard      M N  dimension chess board
-     * @param figureCountList a list of pieces  with their count to be placed on the board
-     */
 
-    public static void printoutUniqueCorrectPermutations(ChessBoard chessBoard, LinkedList<Pair<ChessFigure,
+    private static void printoutUniqueCorrectPermutations(ChessBoard chessBoard, LinkedList<Pair<ChessFigure,
             Integer>> figureCountList, final ThreadPoolExecutor executor) {
 
         if (figureCountList.isEmpty()) {

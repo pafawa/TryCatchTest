@@ -42,7 +42,6 @@ public final class PermutationGenerator {
 
         printoutUniqueCorrectPermutations(chessBoard, figureCountList, threadPoolExecutor);
 
-
         while (true) {
             if (threadPoolExecutor.getQueue().size() == 0 && threadPoolExecutor.getActiveCount() == 0) {
                 break;
@@ -65,7 +64,7 @@ public final class PermutationGenerator {
 
         Pair<ChessFigure, Integer> chessFigureCount = figureCountList.removeFirst();
         if (chessFigureCount.snd == null || chessFigureCount.snd < 1) {
-            throw new IllegalArgumentException("Piece count can't be less than 0");
+            throw new IllegalArgumentException("Piece count must be grater than 0");
         }
 
         Iterator<Set<Position>> it = findUniqueSubsets(chessBoard.getAvailablePos(), chessFigureCount.snd).iterator();

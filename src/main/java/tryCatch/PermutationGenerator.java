@@ -54,7 +54,7 @@ public class PermutationGenerator {
 
     }
 
-    private static <E> Set<Set<E>> findUniqueSubsets(List<E> list, int subSetSize) {
+    public static <E> Set<Set<E>> findUniqueSubsets(List<E> list, int subSetSize) {
 
         Set<Set<E>> uniqueSubsetList = new HashSet<Set<E>>();
 

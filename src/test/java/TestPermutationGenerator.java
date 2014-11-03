@@ -2,10 +2,15 @@ import com.sun.tools.javac.util.Pair;
 import org.junit.Test;
 import tryCatch.ChessBoard;
 import tryCatch.PermutationGenerator;
+import tryCatch.Position;
 import tryCatch.figure.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.Set;
+
+import static tryCatch.PermutationGenerator.findUniqueSubsets;
 
 /**
  * Created by pfarid on 28/10/14.
@@ -32,5 +37,25 @@ public class TestPermutationGenerator {
                         2))));
 
 
+    }
+
+
+    @Test
+    public void testPerm() {
+
+        for (Set<Position> positionList : findUniqueSubsets(new ArrayList<Position>
+                (Arrays.asList(new
+                                Position(1, 1), new Position(1, 2),
+                        new Position(1, 3), new Position(1, 4))), 2)) {
+
+            System.out.print("[");
+            for (Position position : positionList) {
+                System.out.print(position + ", ");
+
+
+            }
+            System.out.print("]");
+
+        }
     }
 }

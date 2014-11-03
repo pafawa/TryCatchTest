@@ -1,74 +1,81 @@
 package tryCatch;
 
+import com.sun.tools.javac.util.Pair;
 import tryCatch.figure.ChessFigure;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by pfarid on 02/11/14.
  */
 public class PermutationGenerator {
 
-    /**
-     * Printouts all correct permutations (the correct permutation is a permutation for which all of the pieces can be
-     * placed on the board without threatening each other).
-     *
-     * @param chessBoard - M N  dimension chess board
-     * @param figureList - a list of pieces to be placed on the board
-     */
-
-    public static void printoutUniqueCorrectPermutations(ChessBoard chessBoard, LinkedList<ChessFigure> figureList) {
-
-        Set<ChessBoard> rootOfaTestedTree = new HashSet<ChessBoard>();
-
-        printoutUniqueCorrectPermutations(chessBoard, figureList, rootOfaTestedTree);
-
-    }
-
 
     /**
      * Ands all correct permutations (the correct permutation is a permutation for which all of the pieces can be
      * placed on the board without threatening each other) to a collection.
      *
-     * @param chessBoard        M N  dimension chess board
-     * @param figureList        a list of pieces to be placed on the board
-     * @param rootOfaTestedTree a set that stores roots of the already tested tree of chessboard permutations
+     * @param chessBoard      M N  dimension chess board
+     * @param figureCountList a list of pieces  with their count to be placed on the board
      */
 
-    public static void printoutUniqueCorrectPermutations(ChessBoard chessBoard, LinkedList<ChessFigure> figureList,
-                                                         Set<ChessBoard> rootOfaTestedTree) {
-        if (figureList.isEmpty()) {
+    public static void printoutUniqueCorrectPermutations(ChessBoard chessBoard, LinkedList<Pair<ChessFigure,
+            Integer>> figureCountList) {
+
+        if (figureCountList.isEmpty()) {
             System.out.print(chessBoard);
             System.out.print("\n");
             return;
         }
 
-        ChessFigure chessFigure = figureList.removeFirst();
+        Pair<ChessFigure, Integer> chessFigureCount = figureCountList.removeFirst();
+        if (chessFigureCount.snd == null || chessFigureCount.snd < 1) {
+            throw new IllegalArgumentException("Piece count can't be less than 0");
+        }
 
-        Iterator<Position> it = chessBoard.getAvailablePosIterator();
+
+        Iterator<Set<Position>> it = findUniqueSubsets(chessBoard.getAvailablePos(), chessFigureCount.snd).iterator();
         while (it.hasNext()) {
-            Position position = it.next();
+            Set<Position> positionSet = it.next();
 
             ChessBoard newChessBoard = new ChessBoard(chessBoard);
 
             try {
-                newChessBoard.placeFigureAndMarkThreaten(position, chessFigure);
+                for (Position position : positionSet) {
+                    newChessBoard.placeFigureAndMarkThreaten(position, chessFigureCount.fst);
+                }
             } catch (PositionsInCollisionException e) {
                 continue;
             }
 
-            if (rootOfaTestedTree.contains(newChessBoard)) {
-                continue;
-            }
-            rootOfaTestedTree.add(newChessBoard);
-
-            printoutUniqueCorrectPermutations(newChessBoard, new LinkedList<ChessFigure>(figureList),
-                    rootOfaTestedTree);
+            printoutUniqueCorrectPermutations(newChessBoard, new LinkedList<Pair<ChessFigure,
+                    Integer>>(figureCountList));
         }
 
+    }
+
+    private static <E> Set<Set<E>> findUniqueSubsets(List<E> list, int subSetSize) {
+
+        Set<Set<E>> uniqueSubsetList = new HashSet<Set<E>>();
+
+        findUniqueSubsets(list, subSetSize, new HashSet<E>(), uniqueSubsetList);
+
+        return uniqueSubsetList;
+    }
+
+    private static <E> void findUniqueSubsets(List<E> list, int subSetSize, Set<E> prefixSet,
+                                              Set<Set<E>> uniqueSubsetList) {
+        if (prefixSet.size() == subSetSize) {
+            uniqueSubsetList.add(new HashSet<E>(prefixSet));
+        } else {
+            for (int i = 0; i < list.size(); i++) {
+                E removed = list.remove(i);
+                prefixSet.add(removed);
+                findUniqueSubsets(list, subSetSize, prefixSet, uniqueSubsetList);
+                prefixSet.remove(removed);
+                list.add(i, removed);
+            }
+        }
     }
 
 

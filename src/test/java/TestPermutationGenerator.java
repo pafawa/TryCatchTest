@@ -1,3 +1,4 @@
+import com.sun.tools.javac.util.Pair;
 import org.junit.Test;
 import tryCatch.ChessBoard;
 import tryCatch.PermutationGenerator;
@@ -15,7 +16,8 @@ public class TestPermutationGenerator {
     @Test
     public void test3x3() {
         PermutationGenerator.printoutUniqueCorrectPermutations(new ChessBoard(new int[3][3]),
-                new LinkedList<ChessFigure>(Arrays.asList(new King(), new King(), new Rook())));
+                new LinkedList<Pair<ChessFigure, Integer>>(Arrays.asList(new Pair<ChessFigure, Integer>(new King(),
+                        2), new Pair<ChessFigure, Integer>(new Rook(), 1))));
 
     }
 
@@ -23,8 +25,12 @@ public class TestPermutationGenerator {
     @Test
     public void test7x7() {
         PermutationGenerator.printoutUniqueCorrectPermutations(new ChessBoard(new int[7][7]),
-                new LinkedList<ChessFigure>(Arrays.asList(new King(), new King(), new Queen(), new Queen(),
-                        new Bishop(), new Bishop(), new Knight())));
+                new LinkedList<Pair<ChessFigure, Integer>>(Arrays.asList(new Pair<ChessFigure, Integer>(new Queen(),
+                        2), new Pair<ChessFigure, Integer>(new Bishop(), 2), new Pair<ChessFigure,
+                        Integer>(new Knight(),
+                        1), new Pair<ChessFigure, Integer>(new King(),
+                        2))));
+
 
     }
 }

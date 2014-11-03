@@ -41,4 +41,8 @@ public class Position {
         return po.column == this.column && po.row == this.row;
     }
 
+    @Override
+    public String toString() {
+        return "(c:" + column + ",r:" + row + ")";
+    }
 }

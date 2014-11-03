@@ -50,15 +50,15 @@ public class ChessBoard {
         this.rowNum = chessBoard.rowNum;
         this.colNum = chessBoard.colNum;
 
-        this.available = new LinkedHashSet<Position>(chessBoard.available);
+        this.available = new HashSet<Position>(chessBoard.available);
         this.taken = new HashMap<Position, ChessFigure>(chessBoard.taken);
     }
 
     /**
      * @return Iterator for available positions
      */
-    public Iterator<Position> getAvailablePosIterator() {
-        return available.iterator();
+    public List<Position> getAvailablePos() {
+        return new ArrayList<Position>(available);
     }
 
     /**

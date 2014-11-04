@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
  */
 public final class PermutationGenerator {
 
-    public static int POOL_SIZE = 6;
+    public static int POOL_SIZE = 8;
     public static int MAX_QUEUE_SIZE = 10;
 
 
@@ -112,22 +112,22 @@ public final class PermutationGenerator {
 
         Set<Set<E>> uniqueSubsetList = new HashSet<Set<E>>();
 
-        findUniqueSubsets(list, subSetSize, new HashSet<E>(), uniqueSubsetList);
+        findUniqueSubsets(list, subSetSize, new LinkedList<E>(), uniqueSubsetList);
 
         return uniqueSubsetList;
     }
 
-    private static <E> void findUniqueSubsets(List<E> list, int subSetSize, Set<E> prefixSet,
+    private static <E> void findUniqueSubsets(List<E> list, int subSetSize, LinkedList<E> prefixList,
                                               Set<Set<E>> uniqueSubsetList) {
-        if (prefixSet.size() == subSetSize) {
-            uniqueSubsetList.add(new HashSet<E>(prefixSet));
+        if (prefixList.size() == subSetSize) {
+            uniqueSubsetList.add(new HashSet<E>(prefixList));
         } else {
-            for (int i = 0; i < list.size(); i++) {
-                E removed = list.remove(i);
-                prefixSet.add(removed);
-                findUniqueSubsets(list, subSetSize, prefixSet, uniqueSubsetList);
-                prefixSet.remove(removed);
-                list.add(i, removed);
+            int listSize = list.size();
+            for (int i = 0; i < listSize; i++) {
+                E removed = list.remove(0);
+                prefixList.add(removed);
+                findUniqueSubsets(new LinkedList<E>(list), subSetSize, prefixList, uniqueSubsetList);
+                prefixList.removeLast();
             }
         }
     }
